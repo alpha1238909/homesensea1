@@ -11,6 +11,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { generateHomeAiReport } from "../lib/ai.functions";
 import { buildHomeContext } from "../lib/home-context";
 import { buildAIReport } from "../services/resource-engine";
+import detectionLightsAc from "../assets/detection-lights-ac.png.asset.json";
+import detectionWater from "../assets/detection-water.png.asset.json";
 
 type Lang = "en" | "ru" | "kz";
 type Page = "home" | "assistant" | "report" | "cameras" | "sensors" | "profile";
@@ -333,7 +335,7 @@ const initialEvents: HomeEvent[] = [
 ];
 const initialSnapshot: AppSnapshot = {
   homeName: "My Apartment",
-  monitoringDay: 18,
+  monitoringDay: 3,
   automationEnabled: false,
   tariffs: { electricity: 25, water: 93.3, currency: "₸" },
   events: initialEvents,
