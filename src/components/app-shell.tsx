@@ -299,6 +299,7 @@ const initialEvents: HomeEvent[] = [
     confidence: 88,
     severity: "warning",
     source: "Phone audio + water meter → duration → tariff",
+    image: detectionWater.url,
   },
   {
     id: "e2",
@@ -313,6 +314,7 @@ const initialEvents: HomeEvent[] = [
     confidence: 94,
     severity: "warning",
     source: "Camera detection → power model → duration → tariff",
+    image: detectionLightsAc.url,
   },
   {
     id: "e3",

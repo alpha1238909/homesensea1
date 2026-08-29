@@ -15,6 +15,7 @@ export type HomeEvent = {
   confidence: number;
   severity: "info" | "warning" | "critical" | "success";
   source: string;
+  image?: string;
 };
 
 export type Device = {
