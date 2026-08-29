@@ -1,0 +1,6 @@
+import type {AudioClassificationService,BluetoothService,DetectionSource,WaterMeterService} from "./resource-engine";
+import type {DetectionPayload} from "../types";
+export class MockYoloSource implements DetectionSource{async next():Promise<DetectionPayload>{return{camera_id:"camera_01",timestamp:new Date().toISOString(),room:"kitchen",detections:[{object:"person",confidence:.96},{object:"light",confidence:.91,state:"on"}]}}}
+export class MockAudioSensor implements AudioClassificationService{private state:"listening"|"water"|"idle"="idle";async start(){this.state="listening"}async stop(){this.state="idle"}async getState(){return this.state}}
+export class MockWaterMeter implements WaterMeterService{async getReading(){return{currentM3:128.42,dailyM3:.42,monthlyM3:12.8}}}
+export class MockBluetoothService implements BluetoothService{private states=new Map<string,string>();async connect(id:string){this.states.set(id,"CONNECTED");return true}async disconnect(id:string){this.states.set(id,"DISCONNECTED");return true}async getStatus(id:string){return this.states.get(id)??"DISCONNECTED"}async sendCommand(id:string,command:string){const state=command.includes("CLOSE")?"CLOSED":command.includes("OFF")?"OFF":"ON";this.states.set(id,state);return{ok:true,state}}}
