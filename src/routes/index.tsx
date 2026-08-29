@@ -1,24 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthGateway } from "../components/auth-gateway";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "HomeSense AI — Home Resource Intelligence" },
+      {
+        name: "description",
+        content:
+          "HomeSense AI finds invisible water and electricity waste at home, prices it and recommends automation only once the waste is proven.",
+      },
+      { property: "og:title", content: "HomeSense AI — Home Resource Intelligence" },
+      {
+        property: "og:description",
+        content: "See waste. Measure impact. Start saving with AI-powered home resource monitoring.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  ssr: false,
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <AuthGateway
+      supabaseUrl={import.meta.env["VITE_SUPABASE_URL"]}
+      supabasePublishableKey={import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"]}
+      dataMode={import.meta.env["VITE_DATA_MODE"]}
+      authMode={import.meta.env["VITE_AUTH_MODE"]}
+    />
   );
 }
