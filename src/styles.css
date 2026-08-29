@@ -618,12 +618,26 @@ a {
   background: none;
   width: 100%;
   display: grid;
-  grid-template-columns: 32px 1fr auto;
+  grid-template-columns: 32px 1fr auto auto;
   gap: 10px;
   padding: 12px 0;
   text-align: left;
   align-items: center;
   cursor: pointer;
+}
+.event-thumb {
+  width: 64px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #27435e;
+}
+.event-photo {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #27435e;
 }
 .event-symbol {
   width: 27px;
