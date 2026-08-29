@@ -345,7 +345,7 @@ const initialSnapshot: AppSnapshot = {
     { id: "light", name: "Kitchen Light", room: "Kitchen", powerKw: 0.6 },
   ],
   waterReading: 128.42,
-  savedTotal: 42180,
+  savedTotal: 2140,
   profile: defaultProfile,
 };
 const cameraSeed = [
@@ -543,11 +543,11 @@ export function AppShell({
   };
   const metrics = useMemo(
     () => ({
-      waste: 15240,
-      annual: 182880,
+      waste: 4860,
+      annual: 58320,
       water: 12.8,
       electricity: 246,
-      savings: snapshot.automationEnabled ? 11120 : 10800,
+      savings: snapshot.automationEnabled ? 3560 : 3240,
     }),
     [snapshot],
   );
@@ -857,23 +857,23 @@ function Dashboard({
         </article>
         <article className="panel breakdown">
           <PanelHead title={t.where} kicker={t.waste} />
-          <Break label={t.water} value={6420} total={15240} color="#2dd4bf" />
+          <Break label={t.water} value={2050} total={4860} color="#2dd4bf" />
           <Break
             label={langLabel(t, "Lighting")}
-            value={4210}
-            total={15240}
+            value={1340}
+            total={4860}
             color="#818cf8"
           />
           <Break
             label={langLabel(t, "Appliances")}
-            value={3840}
-            total={15240}
+            value={1180}
+            total={4860}
             color="#607d9a"
           />
           <Break
             label={langLabel(t, "Stove")}
-            value={770}
-            total={15240}
+            value={290}
+            total={4860}
             color="#ff8b73"
           />
         </article>
@@ -1583,6 +1583,14 @@ function EventRow({ event, t, expanded, onClick }: any) {
           <b>{eventTitle(event.kind, t)}</b>
           <p>{t.noPerson}</p>
         </div>
+        {event.image && (
+          <img
+            className="event-thumb"
+            src={event.image}
+            alt={eventTitle(event.kind, t)}
+            loading="lazy"
+          />
+        )}
         <div className="event-cost">
           <strong>{event.cost.toFixed(1)} ₸</strong>
           <small>{event.confidence}%</small>
@@ -1590,6 +1598,14 @@ function EventRow({ event, t, expanded, onClick }: any) {
       </button>
       {expanded && (
         <div className="calculation">
+          {event.image && (
+            <img
+              className="event-photo"
+              src={event.image}
+              alt={eventTitle(event.kind, t)}
+              loading="lazy"
+            />
+          )}
           <b>{t.how}</b>
           <span>{event.source}</span>
           <span>
