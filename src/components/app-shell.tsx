@@ -108,7 +108,6 @@ const copy = {
     cameras: "Камеры",
     sensors: "Сенсоры",
     subscription: "Подписка",
-    subscription: "Жазылым",
     profile: "Профиль",
     monitoring: "Мониторинг",
     system: "Все системы работают",
