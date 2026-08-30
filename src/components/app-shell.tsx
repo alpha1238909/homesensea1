@@ -189,6 +189,7 @@ const copy = {
     report: "AI есебі",
     cameras: "Камералар",
     sensors: "Сенсорлар",
+    subscription: "Жазылым",
     profile: "Профиль",
     monitoring: "Мониторинг",
     system: "Барлық жүйе жұмыс істеп тұр",
