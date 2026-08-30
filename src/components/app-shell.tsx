@@ -6,6 +6,7 @@ import type { AppSnapshot, HomeEvent, HomeProfile } from "../types";
 import { LiveCameraPanel } from "./live-camera-panel";
 import { OfficialReport } from "./official-report";
 import { DataAssistant } from "./data-assistant";
+import { Subscription } from "./subscription";
 import type { SnapshotAdapter } from "../services/supabase-state.service";
 import { useServerFn } from "@tanstack/react-start";
 import { generateHomeAiReport } from "../lib/ai.functions";
@@ -15,7 +16,7 @@ import detectionLightsAc from "../assets/detection-lights-ac.png.asset.json";
 import detectionWater from "../assets/detection-water.png.asset.json";
 
 type Lang = "en" | "ru" | "kz";
-type Page = "home" | "assistant" | "report" | "cameras" | "sensors" | "profile";
+type Page = "home" | "assistant" | "report" | "cameras" | "sensors" | "subscription" | "profile";
 const copy = {
   en: {
     home: "Dashboard",
@@ -23,6 +24,7 @@ const copy = {
     report: "AI Report",
     cameras: "Cameras",
     sensors: "Sensors",
+    subscription: "Subscription",
     profile: "Profile",
     monitoring: "Monitoring",
     system: "All systems operational",
@@ -105,6 +107,7 @@ const copy = {
     report: "AI-отчёт",
     cameras: "Камеры",
     sensors: "Сенсоры",
+    subscription: "Подписка",
     profile: "Профиль",
     monitoring: "Мониторинг",
     system: "Все системы работают",
@@ -186,6 +189,7 @@ const copy = {
     report: "AI есебі",
     cameras: "Камералар",
     sensors: "Сенсорлар",
+    subscription: "Жазылым",
     profile: "Профиль",
     monitoring: "Мониторинг",
     system: "Барлық жүйе жұмыс істеп тұр",
@@ -557,6 +561,7 @@ export function AppShell({
     ["report", t.report, "AI"],
     ["cameras", t.cameras, "◉"],
     ["sensors", t.sensors, "⌁"],
+    ["subscription", t.subscription, "★"],
     ["profile", t.profile, "○"],
   ];
   const Report = ({ lang, snapshot, metrics }: any) => (
@@ -723,6 +728,7 @@ export function AppShell({
             toast={toast}
           />
         )}{" "}
+        {page === "subscription" && <Subscription lang={lang} toast={toast} />}{" "}
         {page === "profile" && (
           <Profile
             t={t}

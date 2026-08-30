@@ -4158,3 +4158,81 @@ a {
     line-height: 1.4;
   }
 }
+
+/* ===== Subscription page ===== */
+.sub-page { display: grid; gap: 18px; }
+.sub-hero {
+  display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between;
+}
+.sub-hero h2 { font-size: 24px; font-weight: 800; margin: 6px 0; }
+.sub-hero p { color: var(--muted); max-width: 620px; font-size: 14px; }
+.sub-toggle {
+  display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px;
+  background: var(--elevated); border: 1px solid var(--line);
+}
+.sub-toggle button {
+  position: relative; border: 0; background: transparent; color: var(--muted);
+  padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 650; cursor: pointer;
+}
+.sub-toggle button.active { color: var(--primary-fg); }
+.sub-toggle button span { position: relative; z-index: 1; }
+.sub-toggle-pill {
+  position: absolute; inset: 0; border-radius: 999px; background: var(--primary); z-index: 0;
+}
+.sub-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.sub-card { position: relative; overflow: hidden; display: grid; gap: 12px; align-content: start; cursor: pointer; }
+.sub-card.selected { border-color: color-mix(in srgb, var(--primary) 55%, var(--line)); }
+.sub-card.highlighted {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--primary) 12%, var(--card)), var(--card));
+}
+.sub-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.sub-card-head b { font-size: 16px; font-weight: 800; }
+.sub-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.sub-badge {
+  font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 999px;
+  background: var(--elevated); color: var(--muted); border: 1px solid var(--line);
+}
+.sub-badge.popular { background: color-mix(in srgb, var(--accent) 30%, var(--card)); color: var(--text); }
+.sub-card-info { color: var(--muted); font-size: 13px; }
+.sub-price { display: grid; gap: 2px; }
+.sub-price strong { font-size: 26px; font-weight: 800; }
+.sub-price small { color: var(--muted); font-size: 12px; }
+.sub-cta {
+  border: 0; border-radius: 12px; padding: 11px 16px; font-weight: 700; cursor: pointer;
+  background: var(--primary); color: var(--primary-fg);
+}
+.sub-columns { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.sub-features { display: grid; gap: 10px; list-style: none; padding: 0; margin: 14px 0 0; }
+.sub-features li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; font-size: 13px; color: var(--text); }
+.sub-check { color: var(--secondary); font-weight: 800; }
+.sub-rules { display: grid; gap: 10px; list-style: none; padding: 0; margin: 14px 0 0; }
+.sub-rules li {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--elevated);
+  font-size: 13px;
+}
+.sub-switch {
+  display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent;
+  color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.sub-switch i {
+  width: 34px; height: 18px; border-radius: 999px; background: var(--line); position: relative; transition: background .2s;
+}
+.sub-switch i::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--surface); transition: transform .2s;
+}
+.sub-switch.on i { background: var(--secondary); }
+.sub-switch.on i::after { transform: translateX(16px); }
+.sub-forecast-row { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin-top: 14px; }
+.sub-forecast-row div {
+  padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--elevated); display: grid; gap: 4px;
+}
+.sub-forecast-row strong { font-size: 20px; font-weight: 800; }
+.sub-forecast-row small { color: var(--muted); font-size: 11px; }
+.border-trail-wrap { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.border-trail-dot {
+  position: absolute; offset-distance: 0%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 70%, transparent), transparent 70%);
+  filter: blur(6px);
+}
