@@ -28,7 +28,7 @@ export function BorderTrail({
     <div className="border-trail-wrap" aria-hidden="true">
       <motion.div
         className={`border-trail-dot ${className ?? ""}`}
-        style={{ width: size, height: size, offsetPath: "rect(0 auto auto 0 round 18px)", ...style } as React.CSSProperties}
+        style={{ width: size, height: size, offsetPath: "rect(0 auto auto 0 round 18px)", ...style } as any}
         animate={{ offsetDistance: ["0%", "100%"] }}
         transition={{ ...(transition ?? base), ...(delay !== undefined ? { delay } : {}) }}
       />
