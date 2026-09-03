@@ -1312,6 +1312,7 @@ function Sensors({
       ) : (
         <Empty lang={lang} />
       )}
+      <DeviceConnect lang={lang} toast={toast} />
       <section className="panel sensor-table">
         <PanelHead
           title={
