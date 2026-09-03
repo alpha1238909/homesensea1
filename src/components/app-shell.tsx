@@ -7,6 +7,7 @@ import { LiveCameraPanel } from "./live-camera-panel";
 import { OfficialReport } from "./official-report";
 import { DataAssistant } from "./data-assistant";
 import { Subscription } from "./subscription";
+import { DeviceConnect } from "./device-connect";
 import type { SnapshotAdapter } from "../services/supabase-state.service";
 import { useServerFn } from "@tanstack/react-start";
 import { generateHomeAiReport } from "../lib/ai.functions";
