@@ -485,8 +485,12 @@ a {
 }
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1.7fr 0.8fr;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.8fr);
   gap: 12px;
+}
+.dashboard-grid > *,
+.metric-grid > * {
+  min-width: 0;
 }
 .panel,
 .room-strip,
@@ -530,6 +534,8 @@ a {
 }
 .chart-wrap svg {
   flex: 1;
+  width: 100%;
+  min-width: 0;
   overflow: visible;
 }
 .gridline {
@@ -1717,7 +1723,7 @@ a {
   .mobile-nav {
     position: fixed;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     left: 0;
     right: 0;
     bottom: 0;
