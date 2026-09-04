@@ -832,25 +832,7 @@ function Dashboard({
       <section className="dashboard-grid">
         <article className="panel chart-panel">
           <PanelHead title={t.trend} kicker="14 DAYS" />
-          <div className="chart-wrap">
-            <div className="y-labels">
-              <span>16k</span>
-              <span>12k</span>
-              <span>8k</span>
-              <span>4k</span>
-              <span>0</span>
-            </div>
-            <svg viewBox="0 0 700 220" preserveAspectRatio="none">
-              <path
-                className="gridline"
-                d="M0 25H700M0 72H700M0 119H700M0 166H700M0 213H700"
-              />
-              <path
-                className="line"
-                d="M0 168 C70 132 100 158 150 115 S245 70 290 98 S370 155 430 112 S525 44 575 72 S650 92 700 48"
-              />
-            </svg>
-          </div>
+          <RealChart events={snapshot.events} t={t} />
           <div className="chart-legend">
             <span>
               <i className="dot amber" />
