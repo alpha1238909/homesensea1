@@ -1487,37 +1487,55 @@ function Profile({
   );
 }
 
+function smoothPath(points: { x: number; y: number }[]) {
+  if (points.length < 2) return "";
+  let d = `M${points[0]!.x} ${points[0]!.y}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)]!;
+    const p1 = points[i]!;
+    const p2 = points[i + 1]!;
+    const p3 = points[Math.min(points.length - 1, i + 2)]!;
+    const c1x = p1.x + (p2.x - p0.x) / 6;
+    const c1y = p1.y + (p2.y - p0.y) / 6;
+    const c2x = p2.x - (p3.x - p1.x) / 6;
+    const c2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+
 function RealChart({ events, t }: any) {
-  const DAYS = 14;
+  const HOURS = 24;
   const W = 700;
   const H = 220;
   const PAD = 12;
   const now = new Date();
-  const days: { label: string; waste: number }[] = [];
-  for (let i = DAYS - 1; i >= 0; i--) {
+  const hours: { label: string; waste: number }[] = [];
+  for (let i = HOURS - 1; i >= 0; i--) {
     const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const key = d.toDateString();
+    d.setMinutes(0, 0, 0);
+    d.setHours(d.getHours() - i);
+    const next = new Date(d);
+    next.setHours(next.getHours() + 1);
     const waste = events
-      .filter(
-        (e: any) =>
-          new Date(e.timestamp).toDateString() === key && e.cost > 0,
-      )
+      .filter((e: any) => {
+        const ts = new Date(e.timestamp).getTime();
+        return ts >= d.getTime() && ts < next.getTime() && e.cost > 0;
+      })
       .reduce((sum: number, e: any) => sum + e.cost, 0);
-    days.push({ label: `${d.getDate()}.${d.getMonth() + 1}`, waste });
+    hours.push({
+      label: `${String(d.getHours()).padStart(2, "0")}:00`,
+      waste,
+    });
   }
   let cum = 0;
-  const saved = days.map((d) => (cum += d.waste));
-  const max = Math.max(1, ...days.map((d) => d.waste), ...saved);
-  const stepX = (W - PAD * 2) / (DAYS - 1);
+  const saved = hours.map((h) => (cum += h.waste));
+  const max = Math.max(1, ...hours.map((h) => h.waste), ...saved);
+  const stepX = (W - PAD * 2) / (HOURS - 1);
   const x = (i: number) => PAD + i * stepX;
   const y = (v: number) => H - 25 - (v / max) * (H - 45);
-  const wastePath = days
-    .map((d, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(d.waste)}`)
-    .join(" ");
-  const savedPath = saved
-    .map((v, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(v)}`)
-    .join(" ");
+  const wastePath = smoothPath(hours.map((h, i) => ({ x: x(i), y: y(h.waste) })));
+  const savedPath = smoothPath(saved.map((v, i) => ({ x: x(i), y: y(v) })));
   const fmt = (v: number) =>
     v >= 1000 ? `${Math.round(v / 100) / 10}k` : `${Math.round(v)}`;
   return (
@@ -1542,20 +1560,20 @@ function RealChart({ events, t }: any) {
             className="chart-point teal"
             cx={x(i)}
             cy={y(v)}
-            r="5"
+            r="4"
           >
-            <title>{`${days[i]!.label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
+            <title>{`${hours[i]!.label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
           </circle>
         ))}
-        {days.map((d, i) => (
+        {hours.map((h, i) => (
           <circle
             key={`w${i}`}
             className="chart-point amber"
             cx={x(i)}
-            cy={y(d.waste)}
-            r="5"
+            cy={y(h.waste)}
+            r="4"
           >
-            <title>{`${d.label}: ${t.waste} ${Math.round(d.waste).toLocaleString()} ₸`}</title>
+            <title>{`${h.label}: ${t.waste} ${Math.round(h.waste).toLocaleString()} ₸`}</title>
           </circle>
         ))}
       </svg>
