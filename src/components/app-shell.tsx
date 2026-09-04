@@ -831,7 +831,7 @@ function Dashboard({
       </section>
       <section className="dashboard-grid">
         <article className="panel chart-panel">
-          <PanelHead title={t.trend} kicker="14 DAYS" />
+          <PanelHead title={t.trend} kicker="24 HOURS" />
           <RealChart events={snapshot.events} t={t} />
           <div className="chart-legend">
             <span>
