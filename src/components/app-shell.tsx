@@ -1544,7 +1544,7 @@ function RealChart({ events, t }: any) {
             cy={y(v)}
             r="5"
           >
-            <title>{`${days[i].label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
+            <title>{`${days[i]!.label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
           </circle>
         ))}
         {days.map((d, i) => (
