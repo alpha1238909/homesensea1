@@ -547,6 +547,24 @@ a {
   fill: none;
   filter: drop-shadow(0 0 8px #818cf859);
 }
+.teal-line {
+  stroke: #2dd4bf;
+  filter: drop-shadow(0 0 8px #2dd4bf59);
+}
+.chart-point {
+  stroke-width: 0;
+  cursor: pointer;
+}
+.chart-point.amber {
+  fill: var(--primary);
+  stroke: #0b1220;
+  stroke-width: 2;
+}
+.chart-point.teal {
+  fill: #2dd4bf;
+  stroke: #0b1220;
+  stroke-width: 2;
+}
 .area {
   fill: url(#area);
 }
@@ -2149,6 +2167,14 @@ a {
 }
 .v2 .dot.amber {
   background: var(--accent);
+}
+.v2 .chart-point.amber {
+  fill: var(--accent);
+  stroke: var(--bg);
+}
+.v2 .chart-point.teal {
+  fill: #2dd4bf;
+  stroke: var(--bg);
 }
 .v2 .break > div {
   font-size: 13px;

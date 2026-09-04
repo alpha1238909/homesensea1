@@ -832,25 +832,7 @@ function Dashboard({
       <section className="dashboard-grid">
         <article className="panel chart-panel">
           <PanelHead title={t.trend} kicker="14 DAYS" />
-          <div className="chart-wrap">
-            <div className="y-labels">
-              <span>16k</span>
-              <span>12k</span>
-              <span>8k</span>
-              <span>4k</span>
-              <span>0</span>
-            </div>
-            <svg viewBox="0 0 700 220" preserveAspectRatio="none">
-              <path
-                className="gridline"
-                d="M0 25H700M0 72H700M0 119H700M0 166H700M0 213H700"
-              />
-              <path
-                className="line"
-                d="M0 168 C70 132 100 158 150 115 S245 70 290 98 S370 155 430 112 S525 44 575 72 S650 92 700 48"
-              />
-            </svg>
-          </div>
+          <RealChart events={snapshot.events} t={t} />
           <div className="chart-legend">
             <span>
               <i className="dot amber" />
@@ -1501,6 +1483,82 @@ function Profile({
           </div>
         </section>
       </div>
+    </div>
+  );
+}
+
+function RealChart({ events, t }: any) {
+  const DAYS = 14;
+  const W = 700;
+  const H = 220;
+  const PAD = 12;
+  const now = new Date();
+  const days: { label: string; waste: number }[] = [];
+  for (let i = DAYS - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toDateString();
+    const waste = events
+      .filter(
+        (e: any) =>
+          new Date(e.timestamp).toDateString() === key && e.cost > 0,
+      )
+      .reduce((sum: number, e: any) => sum + e.cost, 0);
+    days.push({ label: `${d.getDate()}.${d.getMonth() + 1}`, waste });
+  }
+  let cum = 0;
+  const saved = days.map((d) => (cum += d.waste));
+  const max = Math.max(1, ...days.map((d) => d.waste), ...saved);
+  const stepX = (W - PAD * 2) / (DAYS - 1);
+  const x = (i: number) => PAD + i * stepX;
+  const y = (v: number) => H - 25 - (v / max) * (H - 45);
+  const wastePath = days
+    .map((d, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(d.waste)}`)
+    .join(" ");
+  const savedPath = saved
+    .map((v, i) => `${i === 0 ? "M" : "L"}${x(i)} ${y(v)}`)
+    .join(" ");
+  const fmt = (v: number) =>
+    v >= 1000 ? `${Math.round(v / 100) / 10}k` : `${Math.round(v)}`;
+  return (
+    <div className="chart-wrap">
+      <div className="y-labels">
+        <span>{fmt(max)}</span>
+        <span>{fmt((max * 3) / 4)}</span>
+        <span>{fmt(max / 2)}</span>
+        <span>{fmt(max / 4)}</span>
+        <span>0</span>
+      </div>
+      <svg viewBox="0 0 700 220" preserveAspectRatio="none">
+        <path
+          className="gridline"
+          d="M0 25H700M0 72H700M0 119H700M0 166H700M0 213H700"
+        />
+        <path className="line teal-line" d={savedPath} />
+        <path className="line" d={wastePath} />
+        {saved.map((v, i) => (
+          <circle
+            key={`s${i}`}
+            className="chart-point teal"
+            cx={x(i)}
+            cy={y(v)}
+            r="5"
+          >
+            <title>{`${days[i]!.label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
+          </circle>
+        ))}
+        {days.map((d, i) => (
+          <circle
+            key={`w${i}`}
+            className="chart-point amber"
+            cx={x(i)}
+            cy={y(d.waste)}
+            r="5"
+          >
+            <title>{`${d.label}: ${t.waste} ${Math.round(d.waste).toLocaleString()} ₸`}</title>
+          </circle>
+        ))}
+      </svg>
     </div>
   );
 }
