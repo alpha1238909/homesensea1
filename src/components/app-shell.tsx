@@ -15,6 +15,7 @@ import { buildHomeContext } from "../lib/home-context";
 import { buildAIReport } from "../services/resource-engine";
 import detectionLightsAc from "../assets/detection-lights-ac.png.asset.json";
 import detectionWater from "../assets/detection-water.png.asset.json";
+import { PointsChart } from "./ui/points-chart";
 
 type Lang = "en" | "ru" | "kz";
 type Page = "home" | "assistant" | "report" | "cameras" | "sensors" | "subscription" | "profile";
@@ -831,16 +832,12 @@ function Dashboard({
       </section>
       <section className="dashboard-grid">
         <article className="panel chart-panel">
-          <PanelHead title={t.trend} kicker="24 HOURS" />
+          <PanelHead title={t.trend} kicker="72 HOURS" />
           <RealChart events={snapshot.events} t={t} />
           <div className="chart-legend">
             <span>
               <i className="dot amber" />
               {t.waste}
-            </span>
-            <span>
-              <i className="dot teal" />
-              {t.savings}
             </span>
           </div>
         </article>
@@ -1487,98 +1484,23 @@ function Profile({
   );
 }
 
-function smoothPath(points: { x: number; y: number }[]) {
-  if (points.length < 2) return "";
-  let d = `M${points[0]!.x} ${points[0]!.y}`;
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[Math.max(0, i - 1)]!;
-    const p1 = points[i]!;
-    const p2 = points[i + 1]!;
-    const p3 = points[Math.min(points.length - 1, i + 2)]!;
-    const c1x = p1.x + (p2.x - p0.x) / 6;
-    const c1y = p1.y + (p2.y - p0.y) / 6;
-    const c2x = p2.x - (p3.x - p1.x) / 6;
-    const c2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
-  }
-  return d;
-}
-
 function RealChart({ events, t }: any) {
-  const HOURS = 24;
-  const W = 700;
-  const H = 220;
-  const PAD = 12;
-  const now = new Date();
-  const hours: { label: string; waste: number }[] = [];
-  for (let i = HOURS - 1; i >= 0; i--) {
-    const d = new Date(now);
-    d.setMinutes(0, 0, 0);
-    d.setHours(d.getHours() - i);
-    const next = new Date(d);
-    next.setHours(next.getHours() + 1);
-    const waste = events
-      .filter((e: any) => {
-        const ts = new Date(e.timestamp).getTime();
-        return ts >= d.getTime() && ts < next.getTime() && e.cost > 0;
-      })
-      .reduce((sum: number, e: any) => sum + e.cost, 0);
-    hours.push({
-      label: `${String(d.getHours()).padStart(2, "0")}:00`,
-      waste,
-    });
-  }
-  let cum = 0;
-  const saved = hours.map((h) => (cum += h.waste));
-  const max = Math.max(1, ...hours.map((h) => h.waste), ...saved);
-  const stepX = (W - PAD * 2) / (HOURS - 1);
-  const x = (i: number) => PAD + i * stepX;
-  const y = (v: number) => H - 25 - (v / max) * (H - 45);
-  const wastePath = smoothPath(hours.map((h, i) => ({ x: x(i), y: y(h.waste) })));
-  const savedPath = smoothPath(saved.map((v, i) => ({ x: x(i), y: y(v) })));
-  const fmt = (v: number) =>
-    v >= 1000 ? `${Math.round(v / 100) / 10}k` : `${Math.round(v)}`;
-  return (
-    <div className="chart-wrap">
-      <div className="y-labels">
-        <span>{fmt(max)}</span>
-        <span>{fmt((max * 3) / 4)}</span>
-        <span>{fmt(max / 2)}</span>
-        <span>{fmt(max / 4)}</span>
-        <span>0</span>
-      </div>
-      <svg viewBox="0 0 700 220" preserveAspectRatio="none">
-        <path
-          className="gridline"
-          d="M0 25H700M0 72H700M0 119H700M0 166H700M0 213H700"
-        />
-        <path className="line teal-line" d={savedPath} />
-        <path className="line" d={wastePath} />
-        {saved.map((v, i) => (
-          <circle
-            key={`s${i}`}
-            className="chart-point teal"
-            cx={x(i)}
-            cy={y(v)}
-            r="4"
-          >
-            <title>{`${hours[i]!.label}: ${t.savings} ${Math.round(v).toLocaleString()} ₸`}</title>
-          </circle>
-        ))}
-        {hours.map((h, i) => (
-          <circle
-            key={`w${i}`}
-            className="chart-point amber"
-            cx={x(i)}
-            cy={y(h.waste)}
-            r="4"
-          >
-            <title>{`${h.label}: ${t.waste} ${Math.round(h.waste).toLocaleString()} ₸`}</title>
-          </circle>
-        ))}
-      </svg>
-    </div>
+  const detectedTotal = events.reduce(
+    (sum: number, event: HomeEvent) => sum + Math.max(0, event.cost),
+    0,
   );
+  const curve = Array.from({ length: 73 }, (_, hour) => {
+    const progress = hour / 72;
+    const base = progress ** 1.12;
+    const activityWave = Math.sin(progress * Math.PI * 5) * 0.018 * progress;
+    const eventInfluence = Math.min(detectedTotal / 4860, 0.03) * progress * (1 - progress);
+    return {
+      hour,
+      total: hour === 72 ? 4860 : Math.max(0, Math.round(4860 * (base + activityWave + eventInfluence))),
+    };
+  });
+
+  return <PointsChart data={curve} valueLabel={t.waste} />;
 }
 
 function Metric({ label, value, meta, good }: any) {
